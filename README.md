@@ -100,6 +100,93 @@ Generated characters include:
 - **Backstory**: Origin, family, life events, secrets, reason for arrival
 - **Portrait Description**: Vivid paragraph for character art generation
 
+## Event Generator
+
+Generate dynamic interactions between two characters using LangGraph.
+
+### Basic Usage
+
+```bash
+# List available characters
+uv run python scripts/test_event_generator.py list-characters
+
+# Generate an event between two characters
+uv run python scripts/test_event_generator.py generate \
+  --char-a data/characters/{character_a_id}.json \
+  --char-b data/characters/{character_b_id}.json
+```
+
+### CLI Options
+
+| Option | Short | Description |
+|--------|-------|-------------|
+| `--char-a` | `-a` | Path to character A JSON file (required) |
+| `--char-b` | `-b` | Path to character B JSON file (required) |
+| `--type` | `-t` | Event type (default: `argument`) |
+| `--description` | `-d` | Description of the event |
+| `--location` | `-l` | Where the event takes place (default: `village square`) |
+| `--min` | | Minimum number of interactions (default: 3) |
+| `--max` | | Maximum number of interactions (default: 6) |
+| `--mood-a` | | Initial mood of character A (default: `neutral`) |
+| `--mood-b` | | Initial mood of character B (default: `neutral`) |
+| `--provider` | `-p` | LLM provider: `openai` or `gemini` |
+| `--model` | `-m` | Model name (overrides default) |
+| `--json` | `-j` | Output raw JSON instead of formatted |
+| `--no-save` | | Don't save the event to disk |
+
+### Event Types
+
+- `argument` - Verbal disagreement
+- `fight` - Physical confrontation
+- `stealing` - Theft attempt
+- `romance` - Romantic interaction
+- `trade` - Business transaction
+- `gossip` - Sharing rumors
+- `help` - Offering assistance
+- `celebration` - Festive occasion
+- `confrontation` - Tense face-off
+- `reconciliation` - Making amends
+
+### Character Moods
+
+`angry`, `scared`, `in_love`, `happy`, `sad`, `nervous`, `confident`, `suspicious`, `grateful`, `jealous`, `neutral`
+
+### Examples
+
+```bash
+# Generate an argument at the tavern
+uv run python scripts/test_event_generator.py generate \
+  -a data/characters/abc123.json \
+  -b data/characters/def456.json \
+  -t argument \
+  -d "A dispute over a borrowed farming tool" \
+  -l "the village tavern" \
+  --mood-a angry --mood-b nervous
+
+# Generate a romantic encounter with more interactions
+uv run python scripts/test_event_generator.py generate \
+  -a data/characters/abc123.json \
+  -b data/characters/def456.json \
+  -t romance \
+  -d "A chance meeting at the village well" \
+  --min 5 --max 10
+
+# Output as JSON without saving
+uv run python scripts/test_event_generator.py generate \
+  -a data/characters/abc123.json \
+  -b data/characters/def456.json \
+  --json --no-save
+```
+
+### Event Output
+
+Generated events are saved to `data/events/{event_id}.json` and include:
+
+- **Config**: Event type, description, location, participants, moods
+- **Transcript**: Turn-by-turn dialogue and actions with mood tracking
+- **Summary**: Brief description of what happened
+- **Outcome**: Resolution of the event
+
 ## API Server
 
 FastAPI backend for character management and LLM generation.
@@ -209,6 +296,10 @@ farm-village-sim/
 │   │   └── initializer.py # Character generation & storage
 │   ├── llm/              # LLM provider abstraction
 │   │   └── providers.py  # OpenAI & Gemini providers
+│   ├── events/           # Event system (LangGraph)
+│   │   ├── models.py     # Event Pydantic models
+│   │   ├── prompts.py    # Event prompt templates
+│   │   └── graph.py      # LangGraph builder and nodes
 │   ├── world/            # World simulation (TBD)
 │   ├── core/             # Core game logic (TBD)
 │   └── ui/               # User interface (TBD)
@@ -219,8 +310,11 @@ farm-village-sim/
 │   │   ├── hooks/        # API hooks (useCharacters, useCreateCharacter)
 │   │   └── components/   # WizardStep, CharacterPreview, etc.
 │   └── public/
-├── data/characters/      # Saved character JSON files
+├── data/
+│   ├── characters/       # Saved character JSON files
+│   └── events/           # Saved event JSON files
 ├── scripts/
-│   └── test_character_init.py  # Character generation CLI
+│   ├── test_character_init.py   # Character generation CLI
+│   └── test_event_generator.py  # Event generation CLI
 └── tests/                # Test suite
 ```
