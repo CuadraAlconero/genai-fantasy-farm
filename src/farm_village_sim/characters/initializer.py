@@ -1,5 +1,8 @@
 """Character initialization using LLM-powered generation."""
 
+import uuid
+from pathlib import Path
+
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from farm_village_sim.characters.models import Character
@@ -8,6 +11,9 @@ from farm_village_sim.characters.prompts import (
     CHARACTER_USER_PROMPT_TEMPLATE,
 )
 from farm_village_sim.llm.providers import LLMProvider
+
+# Default directory for character storage
+DEFAULT_CHARACTERS_DIR = Path("data/characters")
 
 
 class CharacterInitializer:
@@ -97,3 +103,72 @@ class CharacterInitializer:
             raise TypeError(f"Expected Character, got {type(result)}")
 
         return result
+
+    @staticmethod
+    def save_character(
+        character: Character,
+        path: Path | None = None,
+    ) -> Path:
+        """Save a character to a JSON file.
+
+        Args:
+            character: The character to save.
+            path: Optional custom path. If None, saves to data/characters/{id}.json
+
+        Returns:
+            Path: The path where the character was saved.
+        """
+        # Assign ID if not already set
+        if character.id is None:
+            character = character.model_copy(update={"id": str(uuid.uuid4())})
+
+        # Determine save path
+        if path is None:
+            save_dir = DEFAULT_CHARACTERS_DIR
+            save_dir.mkdir(parents=True, exist_ok=True)
+            path = save_dir / f"{character.id}.json"
+        else:
+            path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Save as JSON
+        path.write_text(character.model_dump_json(indent=2))
+
+        return path
+
+    @staticmethod
+    def load_character(path: Path) -> Character:
+        """Load a character from a JSON file.
+
+        Args:
+            path: Path to the character JSON file.
+
+        Returns:
+            Character: The loaded character.
+        """
+        return Character.model_validate_json(path.read_text())
+
+    @staticmethod
+    def list_characters(directory: Path | None = None) -> list[Character]:
+        """List all saved characters from a directory.
+
+        Args:
+            directory: Directory to search. Defaults to data/characters/
+
+        Returns:
+            list[Character]: List of all characters found.
+        """
+        if directory is None:
+            directory = DEFAULT_CHARACTERS_DIR
+
+        if not directory.exists():
+            return []
+
+        characters = []
+        for json_file in directory.glob("*.json"):
+            try:
+                characters.append(Character.model_validate_json(json_file.read_text()))
+            except Exception:
+                # Skip invalid files
+                continue
+
+        return characters

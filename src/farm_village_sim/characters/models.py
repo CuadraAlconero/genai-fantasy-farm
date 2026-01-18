@@ -216,6 +216,12 @@ class Skills(BaseModel):
 class Character(BaseModel):
     """Complete character model combining all attributes."""
 
+    # Unique identifier (assigned when saving)
+    id: str | None = Field(
+        default=None,
+        description="Unique identifier for the character (UUID)",
+    )
+
     # Basic info
     name: str = Field(..., description="Character's full name")
     age: int = Field(..., ge=16, le=100, description="Character's age in years")

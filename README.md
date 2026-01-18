@@ -100,6 +100,41 @@ Generated characters include:
 - **Backstory**: Origin, family, life events, secrets, reason for arrival
 - **Portrait Description**: Vivid paragraph for character art generation
 
+## Frontend UI
+
+A React + TypeScript frontend for viewing characters and managing the village.
+
+### Running the Frontend
+
+```bash
+# Install frontend dependencies
+cd frontend
+npm install
+
+# Start development server
+npm run dev
+```
+
+Open http://localhost:5173 in your browser.
+
+### Frontend Features
+
+- **Landing Page**: Fantasy-themed welcome screen
+- **Dashboard**: Navigation hub with access to Characters, Farm (TBD), Timeline (TBD), etc.
+- **Characters Tab**: View all village characters with search/filter, click to see detailed attributes
+
+### Syncing Character Data
+
+Characters generated via the CLI are saved to `data/characters/`. To view them in the frontend:
+
+```bash
+# Generate and save a character
+uv run python scripts/test_character_init.py -d "a wandering bard" --save
+
+# Or copy characters to frontend public folder
+cp data/characters/*.json frontend/public/data/
+```
+
 ## Development
 
 ### Linting & Formatting
@@ -120,12 +155,20 @@ farm-village-sim/
 │   ├── characters/       # Character models and generation
 │   │   ├── models.py     # Pydantic data models
 │   │   ├── prompts.py    # LLM prompt templates
-│   │   └── initializer.py # Character generation logic
+│   │   └── initializer.py # Character generation & storage
 │   ├── llm/              # LLM provider abstraction
 │   │   └── providers.py  # OpenAI & Gemini providers
 │   ├── world/            # World simulation (TBD)
 │   ├── core/             # Core game logic (TBD)
 │   └── ui/               # User interface (TBD)
+├── frontend/             # React + TypeScript UI
+│   ├── src/
+│   │   ├── pages/        # Landing, Dashboard, Characters
+│   │   ├── types/        # TypeScript interfaces
+│   │   ├── hooks/        # Data loading hooks
+│   │   └── components/   # Reusable UI components
+│   └── public/data/      # Character JSON files
+├── data/characters/      # Saved character JSON files
 ├── scripts/
 │   └── test_character_init.py  # Character generation CLI
 └── tests/                # Test suite
