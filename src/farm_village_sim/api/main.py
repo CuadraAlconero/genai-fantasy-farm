@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from farm_village_sim.api.routers import characters
+from farm_village_sim.api.routers import characters, events
 
 app = FastAPI(
     title="Farm Village Sim API",
@@ -27,6 +27,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(characters.router, prefix="/api/characters", tags=["characters"])
+app.include_router(events.router, prefix="/api/events", tags=["events"])
 
 
 @app.get("/")

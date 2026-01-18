@@ -52,3 +52,140 @@ body {
   border: 3px double var(--color-wood);
   border-radius: 8px;
 }
+
+/* Fantasy link style */
+.fantasy-link {
+  @apply transition-colors;
+  color: var(--color-wood);
+}
+
+.fantasy-link:hover {
+  color: var(--color-forest);
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-underline-offset: 4px;
+}
+
+/* Secondary fantasy button */
+.btn-fantasy-secondary {
+  @apply px-5 py-2.5 rounded-lg font-semibold transition-all duration-200 inline-flex items-center;
+  background: var(--color-parchment);
+  color: var(--color-wood-dark);
+  border: 2px solid var(--color-wood);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.btn-fantasy-secondary:hover {
+  background: var(--color-parchment-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Scroll unroll button */
+.btn-scroll {
+  @apply px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 inline-flex items-center gap-3;
+  background: linear-gradient(180deg, var(--color-gold-light) 0%, var(--color-gold) 100%);
+  color: var(--color-wood-dark);
+  border: 3px solid var(--color-wood);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn-scroll:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn-scroll:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-scroll-icon {
+  @apply text-2xl;
+  animation: float 2s ease-in-out infinite;
+}
+
+/* Continue tale button */
+.btn-continue {
+  @apply px-6 py-3 rounded-lg font-semibold transition-all duration-200 flex flex-col items-center gap-1;
+  background: linear-gradient(180deg, var(--color-parchment) 0%, var(--color-parchment-dark) 100%);
+  color: var(--color-wood-dark);
+  border: 2px solid var(--color-wood);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-width: 280px;
+}
+
+.btn-continue:hover {
+  background: linear-gradient(180deg, var(--color-parchment-dark) 0%, var(--color-parchment) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-continue:hover .btn-continue-icon {
+  animation: bounce-small 0.6s ease-in-out infinite;
+}
+
+.btn-continue-text {
+  @apply text-lg;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-style: italic;
+}
+
+.btn-continue-hint {
+  @apply text-xs;
+  color: var(--color-stone);
+}
+
+.btn-continue-icon {
+  @apply text-lg mt-1;
+  color: var(--color-wood);
+}
+
+/* Animation for new turns appearing */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(0) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-8px) scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes bounce-small {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out forwards;
+}
