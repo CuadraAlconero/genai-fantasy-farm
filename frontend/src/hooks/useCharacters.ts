@@ -1,37 +1,39 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Character } from '../types/character';
 
-// In production, this would be an API call
-// For now, we'll load from a static JSON file or use sample data
+const API_BASE = 'http://localhost:8000/api';
+
 export function useCharacters() {
     const [characters, setCharacters] = useState<Character[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        async function loadCharacters() {
-            try {
-                // Try to load from the data directory
-                const response = await fetch('/data/characters.json');
-                if (response.ok) {
-                    const data = await response.json();
-                    setCharacters(Array.isArray(data) ? data : [data]);
-                } else {
-                    // If no file exists, return empty array
-                    setCharacters([]);
-                }
-            } catch {
-                // If loading fails, use empty array
+    const fetchCharacters = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch(`${API_BASE}/characters`);
+            if (response.ok) {
+                const data = await response.json();
+                setCharacters(data);
+            } else {
+                setError(`Failed to fetch characters: ${response.statusText}`);
                 setCharacters([]);
-            } finally {
-                setLoading(false);
             }
+        } catch (err) {
+            setError('Failed to connect to API. Is the server running?');
+            setCharacters([]);
+        } finally {
+            setLoading(false);
         }
-
-        loadCharacters();
     }, []);
 
-    return { characters, loading, error, setCharacters };
+    useEffect(() => {
+        fetchCharacters();
+    }, [fetchCharacters]);
+
+    return { characters, loading, error, setCharacters, refetch: fetchCharacters };
 }
 
 export function useCharacter(id: string | undefined) {
@@ -47,7 +49,7 @@ export function useCharacter(id: string | undefined) {
 
         async function loadCharacter() {
             try {
-                const response = await fetch(`/data/${id}.json`);
+                const response = await fetch(`${API_BASE}/characters/${id}`);
                 if (response.ok) {
                     const data = await response.json();
                     setCharacter(data);
@@ -65,4 +67,15 @@ export function useCharacter(id: string | undefined) {
     }, [id]);
 
     return { character, loading, error };
+}
+
+export async function deleteCharacter(id: string): Promise<boolean> {
+    try {
+        const response = await fetch(`${API_BASE}/characters/${id}`, {
+            method: 'DELETE',
+        });
+        return response.ok;
+    } catch {
+        return false;
+    }
 }

@@ -151,8 +151,8 @@ function CharacterDetail({ character, onClose }: CharacterDetailProps) {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`px-4 py-2 font-semibold transition-colors ${activeTab === tab.id
-                                    ? 'text-[var(--color-forest)] border-b-2 border-[var(--color-forest)] -mb-[2px]'
-                                    : 'text-[var(--color-stone)] hover:text-[var(--color-ink)]'
+                                ? 'text-[var(--color-forest)] border-b-2 border-[var(--color-forest)] -mb-[2px]'
+                                : 'text-[var(--color-stone)] hover:text-[var(--color-ink)]'
                                 }`}
                         >
                             {tab.label}
@@ -435,14 +435,17 @@ export function Characters() {
                     </div>
                 )}
 
-                {/* Hint for adding characters */}
+                {/* Create character button */}
                 <div className="mt-12 card-fantasy text-center">
-                    <p className="text-[var(--color-ink-light)]">
-                        💡 <strong>Tip:</strong> Generate new characters using the CLI:
+                    <p className="text-[var(--color-ink-light)] mb-4">
+                        Ready to bring a new villager to life?
                     </p>
-                    <code className="block mt-2 bg-[var(--color-parchment-dark)] px-4 py-2 rounded font-mono text-sm">
-                        uv run python scripts/test_character_init.py -d "a mysterious blacksmith"
-                    </code>
+                    <button
+                        onClick={() => navigate('/characters/create')}
+                        className="btn-fantasy text-lg"
+                    >
+                        ✨ Create New Character
+                    </button>
                 </div>
             </div>
 

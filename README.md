@@ -100,9 +100,49 @@ Generated characters include:
 - **Backstory**: Origin, family, life events, secrets, reason for arrival
 - **Portrait Description**: Vivid paragraph for character art generation
 
+## API Server
+
+FastAPI backend for character management and LLM generation.
+
+### Running the API
+
+```bash
+# Start the API server
+uv run uvicorn farm_village_sim.api.main:app --reload
+
+# Or specify host/port
+uv run uvicorn farm_village_sim.api.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+API documentation is available at http://localhost:8000/docs
+
+### API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/characters` | List all characters |
+| `GET` | `/api/characters/{id}` | Get character by ID |
+| `POST` | `/api/characters` | Create new character (LLM generation) |
+| `DELETE` | `/api/characters/{id}` | Delete character |
+
+### Character Creation Request
+
+```json
+{
+  "description": "a mysterious blacksmith",
+  "name_hint": "Marcus",
+  "occupation_hint": "blacksmith",
+  "temperament_hint": "choleric",
+  "age_min": 30,
+  "age_max": 50
+}
+```
+
+All fields are optional. Providing hints guides the LLM generation.
+
 ## Frontend UI
 
-A React + TypeScript frontend for viewing characters and managing the village.
+A React + TypeScript frontend for viewing and creating characters.
 
 ### Running the Frontend
 
@@ -117,22 +157,27 @@ npm run dev
 
 Open http://localhost:5173 in your browser.
 
+**Important:** The frontend requires the API server to be running for character operations.
+
 ### Frontend Features
 
 - **Landing Page**: Fantasy-themed welcome screen
-- **Dashboard**: Navigation hub with access to Characters, Farm (TBD), Timeline (TBD), etc.
-- **Characters Tab**: View all village characters with search/filter, click to see detailed attributes
+- **Dashboard**: Navigation hub with quick access to create characters
+- **Characters Tab**: View all village characters with search/filter
+- **Character Creation Wizard**: Multi-step form to create new characters via LLM
+  - Step 1: Describe your character concept
+  - Step 2: Add optional hints (name, occupation, temperament, age)
+  - Step 3: Review and generate
+  - Step 4: View the result and save
 
-### Syncing Character Data
-
-Characters generated via the CLI are saved to `data/characters/`. To view them in the frontend:
+### Running Both Together
 
 ```bash
-# Generate and save a character
-uv run python scripts/test_character_init.py -d "a wandering bard" --save
+# Terminal 1: Start the API server
+uv run uvicorn farm_village_sim.api.main:app --reload
 
-# Or copy characters to frontend public folder
-cp data/characters/*.json frontend/public/data/
+# Terminal 2: Start the frontend
+cd frontend && npm run dev
 ```
 
 ## Development
@@ -152,6 +197,12 @@ uv run ruff format .
 ```
 farm-village-sim/
 ├── src/farm_village_sim/
+│   ├── api/              # FastAPI backend
+│   │   ├── main.py       # App entry point with CORS
+│   │   ├── routers/      # API route handlers
+│   │   │   └── characters.py
+│   │   └── services/     # Business logic
+│   │       └── character_service.py
 │   ├── characters/       # Character models and generation
 │   │   ├── models.py     # Pydantic data models
 │   │   ├── prompts.py    # LLM prompt templates
@@ -163,11 +214,11 @@ farm-village-sim/
 │   └── ui/               # User interface (TBD)
 ├── frontend/             # React + TypeScript UI
 │   ├── src/
-│   │   ├── pages/        # Landing, Dashboard, Characters
+│   │   ├── pages/        # Landing, Dashboard, Characters, CreateCharacter
 │   │   ├── types/        # TypeScript interfaces
-│   │   ├── hooks/        # Data loading hooks
-│   │   └── components/   # Reusable UI components
-│   └── public/data/      # Character JSON files
+│   │   ├── hooks/        # API hooks (useCharacters, useCreateCharacter)
+│   │   └── components/   # WizardStep, CharacterPreview, etc.
+│   └── public/
 ├── data/characters/      # Saved character JSON files
 ├── scripts/
 │   └── test_character_init.py  # Character generation CLI

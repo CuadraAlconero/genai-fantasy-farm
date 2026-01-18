@@ -16,8 +16,8 @@ function DashboardCard({ title, description, icon, path, available }: DashboardC
             onClick={() => available && navigate(path)}
             disabled={!available}
             className={`card-fantasy text-left w-full transition-all duration-200 ${available
-                    ? 'hover:scale-105 hover:shadow-lg cursor-pointer'
-                    : 'opacity-50 cursor-not-allowed'
+                ? 'hover:scale-105 hover:shadow-lg cursor-pointer'
+                : 'opacity-50 cursor-not-allowed'
                 }`}
         >
             <div className="flex items-start gap-4">
@@ -107,11 +107,19 @@ export function Dashboard() {
                 {/* Divider */}
                 <div className="h-1 bg-gradient-to-r from-transparent via-[var(--color-wood)] to-transparent mb-8" />
 
-                {/* Welcome message */}
-                <div className="card-fantasy mb-8 text-center">
-                    <p className="text-lg text-[var(--color-ink-light)]">
-                        Welcome to your village headquarters. From here, you can manage all aspects of your new life.
-                    </p>
+                {/* Welcome message and quick actions */}
+                <div className="card-fantasy mb-8">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <p className="text-lg text-[var(--color-ink-light)] text-center md:text-left">
+                            Welcome to your village headquarters. From here, you can manage all aspects of your new life.
+                        </p>
+                        <button
+                            onClick={() => navigate('/characters/create')}
+                            className="btn-fantasy whitespace-nowrap"
+                        >
+                            ✨ Create New Character
+                        </button>
+                    </div>
                 </div>
 
                 {/* Dashboard cards grid */}
