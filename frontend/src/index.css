@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/* Fantasy theme CSS variables */
+:root {
+  /* Earthy, medieval color palette */
+  --color-parchment: #f4e4bc;
+  --color-parchment-dark: #e8d4a8;
+  --color-wood: #8b4513;
+  --color-wood-dark: #5c2e0a;
+  --color-forest: #2d5016;
+  --color-forest-light: #4a7c23;
+  --color-gold: #d4a017;
+  --color-gold-light: #f0c040;
+  --color-ink: #2c1810;
+  --color-ink-light: #4a3728;
+  --color-stone: #6b6b6b;
+  --color-stone-light: #8a8a8a;
+}
+
+/* Base styles */
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background-color: var(--color-parchment);
+  color: var(--color-ink);
+}
+
+/* Fantasy button style */
+.btn-fantasy {
+  @apply px-6 py-3 rounded-lg font-semibold transition-all duration-200;
+  background: linear-gradient(180deg, var(--color-wood) 0%, var(--color-wood-dark) 100%);
+  color: var(--color-parchment);
+  border: 2px solid var(--color-gold);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.btn-fantasy:hover {
+  background: linear-gradient(180deg, var(--color-forest-light) 0%, var(--color-forest) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Card style */
+.card-fantasy {
+  @apply rounded-lg p-6;
+  background: linear-gradient(180deg, var(--color-parchment) 0%, var(--color-parchment-dark) 100%);
+  border: 2px solid var(--color-wood);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Decorative border */
+.border-fantasy {
+  border: 3px double var(--color-wood);
+  border-radius: 8px;
+}
