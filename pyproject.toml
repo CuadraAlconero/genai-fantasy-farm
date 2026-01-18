@@ -12,6 +12,7 @@ dependencies = [
     "langchain-anthropic>=0.2.0",    # Anthropic integration for LangChain
     "langchain-google-genai>=2.0.0", # Google Gemini integration for LangChain
     "langchain-community>=0.3.0",    # Community integrations
+    "langgraph>=0.2.0",              # LangGraph for stateful agent workflows
 
     # Prompt Engineering & LLM Utilities
     "jinja2>=3.1.0",   # Template engine for dynamic prompts
