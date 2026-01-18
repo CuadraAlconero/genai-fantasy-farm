@@ -1,0 +1,108 @@
+[project]
+name = "farm-village-sim"
+version = "0.1.0"
+description = "An LLM-powered simulation of life as a newcomer in a fantasy farm village"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    # LLM & AI (LangChain ecosystem)
+    "langchain>=0.3.0",              # Core LangChain framework
+    "langchain-core>=0.3.0",         # LangChain core abstractions
+    "langchain-openai>=0.2.0",       # OpenAI integration for LangChain
+    "langchain-anthropic>=0.2.0",    # Anthropic integration for LangChain
+    "langchain-google-genai>=2.0.0", # Google Gemini integration for LangChain
+    "langchain-community>=0.3.0",    # Community integrations
+
+    # Prompt Engineering & LLM Utilities
+    "jinja2>=3.1.0",   # Template engine for dynamic prompts
+    "tiktoken>=0.8.0", # Token counting for OpenAI models
+
+    # Graph & Relationship Modeling
+    "networkx>=3.4", # Graph library for character/entity relationships
+
+    # Data Handling & Validation
+    "pydantic>=2.0.0",          # Data validation and settings management
+    "pydantic-settings>=2.0.0", # Environment/settings management
+
+    # Async & Concurrency
+    "anyio>=4.0.0",  # Async utilities
+    "httpx>=0.27.0", # Async HTTP client
+
+    # State Management & Persistence
+    "sqlalchemy>=2.0.0", # Database ORM for game state persistence
+    "aiosqlite>=0.20.0", # Async SQLite support
+
+    # CLI & User Interface
+    "rich>=13.0.0",  # Rich text and beautiful terminal output
+    "typer>=0.12.0", # CLI application framework
+
+    # Utilities
+    "python-dotenv>=1.0.0", # Environment variable management
+    "structlog>=24.0.0",    # Structured logging
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=5.0.0",
+    "mypy>=1.11.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "ruff>=0.8.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=5.0.0",
+    "mypy>=1.11.0",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+src = ["src"]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # Pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "ARG", # flake8-unused-arguments
+    "SIM", # flake8-simplify
+    "TC",  # flake8-type-checking
+    "PTH", # flake8-use-pathlib
+    "ERA", # eradicate (commented out code)
+    "RUF", # Ruff-specific rules
+]
+ignore = [
+    "E501", # line too long (handled by formatter)
+]
+
+[tool.ruff.isort]
+known-first-party = ["farm_village_sim"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-v --tb=short"
