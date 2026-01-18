@@ -1,5 +1,6 @@
 """Pydantic models for character data representation."""
 
+import random
 from enum import Enum
 
 from pydantic import BaseModel, Field
@@ -29,6 +30,11 @@ class Temperament(str, Enum):
     SANGUINE = "sanguine"
     MELANCHOLIC = "melancholic"
     PHLEGMATIC = "phlegmatic"
+
+    @classmethod
+    def random(cls) -> "Temperament":
+        """Return a randomly selected temperament."""
+        return random.choice(list(cls))
 
 
 # Detailed temperament descriptions for LLM context
@@ -92,13 +98,14 @@ class Personality(BaseModel):
     """Personality traits and psychological attributes."""
 
     temperament: Temperament = Field(
-        ...,
+        default_factory=Temperament.random,
         description=(
             "Primary temperament type. Options: "
             "choleric (ambitious, driven leaders who are decisive but can be impatient), "
             "sanguine (optimistic, social extroverts who are charming but impulsive), "
             "melancholic (analytical perfectionists who are thoughtful but prone to worry), "
-            "phlegmatic (calm, reliable diplomats who are patient but can be passive)"
+            "phlegmatic (calm, reliable diplomats who are patient but can be passive). "
+            "If not specified, a random temperament will be assigned."
         ),
     )
     positive_traits: list[str] = Field(

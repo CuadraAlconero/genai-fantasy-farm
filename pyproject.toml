@@ -36,6 +36,10 @@ dependencies = [
     "rich>=13.0.0",  # Rich text and beautiful terminal output
     "typer>=0.12.0", # CLI application framework
 
+    # Web API
+    "fastapi>=0.115.0",          # Modern async web framework
+    "uvicorn[standard]>=0.32.0", # ASGI server
+
     # Utilities
     "python-dotenv>=1.0.0", # Environment variable management
     "structlog>=24.0.0",    # Structured logging
