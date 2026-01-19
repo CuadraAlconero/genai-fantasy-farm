@@ -57,11 +57,11 @@ export function Dashboard() {
             available: false,
         },
         {
-            title: 'Event Timeline',
-            description: 'Review the history of the village and track important happenings.',
-            icon: '📜',
-            path: '/timeline',
-            available: false,
+            title: 'Events',
+            description: 'Create and watch dynamic interactions between village characters.',
+            icon: '🎭',
+            path: '/events',
+            available: true,
         },
         {
             title: 'Village Map',
@@ -113,12 +113,23 @@ export function Dashboard() {
                         <p className="text-lg text-[var(--color-ink-light)] text-center md:text-left">
                             Welcome to your village headquarters. From here, you can manage all aspects of your new life.
                         </p>
-                        <button
-                            onClick={() => navigate('/characters/create')}
-                            className="btn-fantasy whitespace-nowrap"
-                        >
-                            ✨ Create New Character
-                        </button>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => navigate('/characters/create')}
+                                className="btn-fantasy whitespace-nowrap"
+                            >
+                                ✨ Create Character
+                            </button>
+                            <button
+                                onClick={() => navigate('/events/create')}
+                                className="btn-fantasy whitespace-nowrap"
+                                style={{
+                                    background: 'linear-gradient(180deg, var(--color-forest-light) 0%, var(--color-forest) 100%)',
+                                }}
+                            >
+                                🎭 Create Event
+                            </button>
+                        </div>
                     </div>
                 </div>
 
