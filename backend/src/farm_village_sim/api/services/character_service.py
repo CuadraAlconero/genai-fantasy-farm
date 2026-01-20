@@ -46,9 +46,23 @@ class CharacterService:
             provider: LLM provider for character generation. If None, uses default.
             storage_dir: Directory for character storage. If None, uses default.
         """
-        self._provider = provider or get_provider("openai")
+        self._provider = provider
         self._storage_dir = storage_dir or DEFAULT_CHARACTERS_DIR
-        self._initializer = CharacterInitializer(self._provider)
+        self._initializer: CharacterInitializer | None = None
+
+    def _get_initializer(self) -> CharacterInitializer:
+        """Get or create the character initializer lazily.
+
+        Returns:
+            The CharacterInitializer instance.
+
+        Raises:
+            ValueError: If no API key is configured.
+        """
+        if self._initializer is None:
+            provider = self._provider or get_provider("openai")
+            self._initializer = CharacterInitializer(provider)
+        return self._initializer
 
     def list_characters(self) -> list[Character]:
         """List all saved characters.
@@ -116,7 +130,7 @@ class CharacterService:
 
         # Generate character
         start_time = time.perf_counter()
-        character = self._initializer.create_character(description)
+        character = self._get_initializer().create_character(description)
         generation_time_ms = int((time.perf_counter() - start_time) * 1000)
 
         # Save character (save_character assigns ID if None and saves to storage_dir)
