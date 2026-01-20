@@ -63,9 +63,22 @@ class EventService:
             events_dir: Directory for event storage. If None, uses default.
             characters_dir: Directory for character storage. If None, uses default.
         """
-        self._provider = provider or get_provider("openai")
+        self._provider = provider
         self._events_dir = events_dir or DEFAULT_EVENTS_DIR
         self._characters_dir = characters_dir or DEFAULT_CHARACTERS_DIR
+
+    def _get_provider(self) -> LLMProvider:
+        """Get or create the LLM provider lazily.
+
+        Returns:
+            The LLMProvider instance.
+
+        Raises:
+            ValueError: If no API key is configured.
+        """
+        if self._provider is None:
+            self._provider = get_provider("openai")
+        return self._provider
 
     def _load_character(self, character_id: str) -> Character | None:
         """Load a character by ID.
@@ -168,7 +181,7 @@ class EventService:
         # Build and run the graph
         start_time = time.perf_counter()
 
-        builder = EventGraphBuilder(self._provider)
+        builder = EventGraphBuilder(self._get_provider())
         graph = builder.build()
         compiled_graph = graph.compile()
 

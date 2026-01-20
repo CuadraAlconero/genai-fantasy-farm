@@ -19,12 +19,12 @@ class LLMSettings(BaseSettings):
 
     # OpenAI settings
     openai_api_key: str | None = None
-    openai_model: str = "gpt-5-mini-2025-08-07"
+    openai_model: str = "o1-mini"
     openai_reasoning_effort: ReasoningEffort = "medium"
 
     # Google Gemini settings
     google_api_key: str | None = None
-    gemini_model: str = "gemini-3-flash-preview"
+    gemini_model: str = "gemini-2.0-flash-thinking-exp"
     gemini_reasoning_effort: ReasoningEffort = "medium"
 
 
