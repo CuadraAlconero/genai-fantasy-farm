@@ -76,16 +76,18 @@ class OpenAIProvider(LLMProvider):
                 "OpenAI API key required. Set OPENAI_API_KEY env var or pass api_key."
             )
 
-        # Configure model kwargs for reasoning models (o1, o3, gpt-5+)
-        model_kwargs: dict[str, str] = {}
+        # For reasoning models (o1, o3, gpt-5+), pass reasoning_effort directly
         if self._model.startswith(("o1", "o3", "gpt-5")):
-            model_kwargs["reasoning_effort"] = self._reasoning_effort
-
-        self._chat_model = ChatOpenAI(
-            api_key=self._api_key,
-            model=self._model,
-            model_kwargs=model_kwargs if model_kwargs else None,
-        )
+            self._chat_model = ChatOpenAI(
+                api_key=self._api_key,
+                model=self._model,
+                reasoning_effort=self._reasoning_effort,
+            )
+        else:
+            self._chat_model = ChatOpenAI(
+                api_key=self._api_key,
+                model=self._model,
+            )
 
     def get_model(self) -> BaseChatModel:
         """Return the ChatOpenAI model instance."""
@@ -130,18 +132,19 @@ class GeminiProvider(LLMProvider):
                 "Google API key required. Set GOOGLE_API_KEY env var or pass api_key."
             )
 
-        # Configure thinking budget for reasoning models (thinking models, gemini-3+)
-        model_kwargs: dict[str, int] = {}
+        # For thinking models, pass thinking_budget directly
         if "thinking" in self._model or self._model.startswith("gemini-3"):
-            model_kwargs["thinking_budget"] = self._THINKING_BUDGET[
-                self._reasoning_effort
-            ]
-
-        self._chat_model = ChatGoogleGenerativeAI(
-            google_api_key=self._api_key,
-            model=self._model,
-            **model_kwargs,
-        )
+            thinking_budget = self._THINKING_BUDGET[self._reasoning_effort]
+            self._chat_model = ChatGoogleGenerativeAI(
+                google_api_key=self._api_key,
+                model=self._model,
+                thinking_budget=thinking_budget,
+            )
+        else:
+            self._chat_model = ChatGoogleGenerativeAI(
+                google_api_key=self._api_key,
+                model=self._model,
+            )
 
     def get_model(self) -> BaseChatModel:
         """Return the ChatGoogleGenerativeAI model instance."""
